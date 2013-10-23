@@ -44,6 +44,7 @@ public class RSSHandler extends DefaultHandler {
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         stack.push(qName);
+        characters = new StringBuilder();
         if (stateStack.isEmpty()) {
             Preconditions.checkState(qName.equals(RSS_TAG));
             stateStack.push(State.IN_RSS);
@@ -56,39 +57,12 @@ public class RSSHandler extends DefaultHandler {
             stateStack.push(State.IN_ENTRY);
 
             entry = new FeedEntry();
-        } else if (stateStack.peek() == State.IN_ENTRY) {
-            if (FeedEntry.DESCRIPTION_TAG.equals(qName)) {
-                stateStack.push(State.IN_STRING_READING_BY_PARTS);
-                characters = new StringBuilder();
-            }
         }
     }
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        if (stateStack.peek() == State.IN_FEED) {
-            final String currentTag = stack.peek();
-            if (Feed.DESCRIPTION_TAG.equals(currentTag)) {
-                feed.setDescription(new String(ch, start, length));
-            } else if (Feed.TITLE_TAG.equals(currentTag)) {
-                feed.setTitle(new String(ch, start, length));
-            }
-        } else if (stateStack.peek() == State.IN_ENTRY) {
-            final String currentTag = stack.peek();
-            if (FeedEntry.LINK_TAG.equals(currentTag)) {
-                entry.setLink(new String(ch, start, length));
-            } else if (FeedEntry.TITLE_TAG.equals(currentTag)) {
-                entry.setTitle(new String(ch, start, length));
-            } else if (FeedEntry.PUBLICATION_DATE_TAG.equals(currentTag)) {
-                final Date publishedDate = parseDate(new String(ch, start, length));
-                entry.setPublishedDate(publishedDate);
-            }
-        } else if (stateStack.peek() == State.IN_STRING_READING_BY_PARTS) {
-            final String currentTag = stack.peek();
-            if (FeedEntry.DESCRIPTION_TAG.equals(currentTag)) {
-                characters.append(ch, start, length);
-            }
-        }
+        characters.append(ch, start, length);
     }
 
     private Date parseDate(String date) throws SAXException {
@@ -112,15 +86,23 @@ public class RSSHandler extends DefaultHandler {
 
             feed.addEntry(entry);
             entry = null;
-        } else if (stateStack.peek() == State.IN_STRING_READING_BY_PARTS) {
-            stateStack.pop();
-            boolean thisContentWasExpected = false;
-            if (stateStack.peek() == State.IN_ENTRY && qName.equals(FeedEntry.DESCRIPTION_TAG)) {
-                entry.setDescription(characters.toString().trim());
-                characters = null;
-                thisContentWasExpected = true;
+        } else if (stateStack.peek() == State.IN_FEED) {
+            if (Feed.DESCRIPTION_TAG.equals(qName)) {
+                feed.setDescription(characters.toString());
+            } else if (Feed.TITLE_TAG.equals(qName)) {
+                feed.setTitle(characters.toString());
             }
-            Preconditions.checkState(thisContentWasExpected);
+        } else if (stateStack.peek() == State.IN_ENTRY) {
+            if (FeedEntry.LINK_TAG.equals(qName)) {
+                entry.setLink(characters.toString());
+            } else if (FeedEntry.TITLE_TAG.equals(qName)) {
+                entry.setTitle(characters.toString());
+            } else if (FeedEntry.PUBLICATION_DATE_TAG.equals(qName)) {
+                final Date publishedDate = parseDate(characters.toString());
+                entry.setPublishedDate(publishedDate);
+            } else if (FeedEntry.DESCRIPTION_TAG.equals(qName)) {
+                entry.setDescription(characters.toString());
+            }
         }
     }
 
@@ -136,8 +118,7 @@ public class RSSHandler extends DefaultHandler {
     private static enum State {
         IN_RSS,
         IN_FEED,
-        IN_ENTRY,
-        IN_STRING_READING_BY_PARTS,
+        IN_ENTRY
     }
 
 }

@@ -1,5 +1,6 @@
 package com.polarnick.rss;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,7 +11,7 @@ import java.util.List;
  *
  * @author Nickolay Polyarniy aka PolarNick
  */
-public class Feed {
+public class Feed implements Serializable {
 
     public static final String TITLE_TAG = "title";
     public static final String DESCRIPTION_TAG = "description";

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="http://lenta.ru/rss"/>
+    <item android:title="http://feeds.newsru.com/com/www/news/big"/>
+    <item android:title="http://bash.im/rss/"/>
+    <item android:title="http://ithappens.ru/rss/"/>
+</menu>

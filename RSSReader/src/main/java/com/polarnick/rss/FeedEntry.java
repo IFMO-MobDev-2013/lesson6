@@ -1,5 +1,6 @@
 package com.polarnick.rss;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  *
  * @author Nickolay Polyarniy aka PolarNick
  */
-public class FeedEntry {
+public class FeedEntry implements Serializable {
 
     public static final String TITLE_TAG = "title";
     public static final String DESCRIPTION_TAG = "description";
