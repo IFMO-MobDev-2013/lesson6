@@ -23,6 +23,7 @@
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
+        <service android:name=".NewFeedChecker"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

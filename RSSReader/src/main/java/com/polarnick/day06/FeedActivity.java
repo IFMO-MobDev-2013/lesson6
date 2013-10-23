@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,10 +24,11 @@ import com.polarnick.rss.FeedEntry;
  *
  * @author Nickolay Polyarniy aka PolarNick
  */
-public class FeedActivity extends ListActivity {
+public class FeedActivity extends ListActivity implements UberResultReceiver.Receiver {
 
     private String currentFeedURL = "http://feeds.newsru.com/com/www/news/big";
     private Feed currentFeed;
+    private UberResultReceiver receiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,8 @@ public class FeedActivity extends ListActivity {
                 loadFeed();
             }
         });
+        receiver = new UberResultReceiver(new Handler());
+        receiver.setReceiver(this);
         loadFeed();
     }
 
@@ -74,14 +78,14 @@ public class FeedActivity extends ListActivity {
         new FeedDownloadTask() {
             @Override
             public void onSuccess(Feed feed) {
-                currentFeed = feed;
-                TextView feedTitle = (TextView) findViewById(R.id.feedTitle);
-                feedTitle.setText(feed.getTitle());
-                TextView feedDescription = (TextView) findViewById(R.id.feedDescription);
-                feedDescription.setText(feed.getDescription());
-                feed.sortEntriesByDatePublished();
-                ArrayAdapter<FeedEntry> adapter = new FeedEntriesAdapter(activity, feed.getEntries());
-                setListAdapter(adapter);
+                feed.setUrl(currentFeedURL);
+
+                Intent intent = new Intent(FeedActivity.this, NewFeedChecker.class);
+                intent.putExtra(NewFeedChecker.FEED_KEY, feed);
+                intent.putExtra(NewFeedChecker.RECEIVER_KEY, receiver);
+                startService(intent);
+
+                setFeed(feed);
                 progressDialog.dismiss();
             }
 
@@ -100,5 +104,36 @@ public class FeedActivity extends ListActivity {
                                 }).create().show();
             }
         }.execute(currentFeedURL);
+    }
+
+    private void setFeed(Feed feed) {
+        currentFeed = feed;
+        TextView feedTitle = (TextView) findViewById(R.id.feedTitle);
+        feedTitle.setText(feed.getTitle());
+        TextView feedDescription = (TextView) findViewById(R.id.feedDescription);
+        feedDescription.setText(feed.getDescription());
+        feed.sortEntriesByDatePublished();
+        ArrayAdapter<FeedEntry> adapter = new FeedEntriesAdapter(this, feed.getEntries());
+        setListAdapter(adapter);
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, final Bundle resultData) {
+        boolean feedIsOutOfDate = resultData.getBoolean(IS_FRESHER_KEY);
+        if (feedIsOutOfDate) {
+            final Feed newFeed = (Feed) resultData.getSerializable(FEED_KEY);
+            if (newFeed.getUrl().equals(currentFeedURL)) {
+                new AlertDialog.Builder(this)
+                        .setMessage("Feed is updated!")
+                        .setCancelable(false)
+                        .setPositiveButton("OK",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        setFeed(newFeed);
+                                    }
+                                }).create().show();
+            }
+        }
     }
 }

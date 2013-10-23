@@ -17,9 +17,18 @@ public class Feed implements Serializable {
     public static final String DESCRIPTION_TAG = "description";
     public static final String ENTRY_TAG = "item";
 
+    private String url;
     private String title;
     private String description;
     private final List<FeedEntry> entries = new ArrayList<FeedEntry>();
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
 
     public void addEntry(FeedEntry entry) {
         entries.add(entry);
