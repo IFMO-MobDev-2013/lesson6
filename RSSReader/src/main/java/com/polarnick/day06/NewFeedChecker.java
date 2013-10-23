@@ -34,7 +34,7 @@ public class NewFeedChecker extends IntentService {
     public static final String FEED_KEY = "feed";
     public static final String RECEIVER_KEY = "receiver";
 
-    private static final int PERIOD_OF_REFRESH = 30 * 60 * 1000;//30 minutes
+    private static final int PERIOD_OF_REFRESH = 10 * 60 * 1000;//30 minutes
 
     public NewFeedChecker() {
         this("NewFeedCheckerIntentService");

@@ -80,11 +80,6 @@ public class FeedActivity extends ListActivity implements UberResultReceiver.Rec
             public void onSuccess(Feed feed) {
                 feed.setUrl(currentFeedURL);
 
-                Intent intent = new Intent(FeedActivity.this, NewFeedChecker.class);
-                intent.putExtra(NewFeedChecker.FEED_KEY, feed);
-                intent.putExtra(NewFeedChecker.RECEIVER_KEY, receiver);
-                startService(intent);
-
                 setFeed(feed);
                 progressDialog.dismiss();
             }
@@ -107,6 +102,11 @@ public class FeedActivity extends ListActivity implements UberResultReceiver.Rec
     }
 
     private void setFeed(Feed feed) {
+        Intent intent = new Intent(FeedActivity.this, NewFeedChecker.class);
+        intent.putExtra(NewFeedChecker.FEED_KEY, feed);
+        intent.putExtra(NewFeedChecker.RECEIVER_KEY, receiver);
+        startService(intent);
+
         currentFeed = feed;
         TextView feedTitle = (TextView) findViewById(R.id.feedTitle);
         feedTitle.setText(feed.getTitle());
@@ -124,7 +124,7 @@ public class FeedActivity extends ListActivity implements UberResultReceiver.Rec
             final Feed newFeed = (Feed) resultData.getSerializable(FEED_KEY);
             if (newFeed.getUrl().equals(currentFeedURL)) {
                 new AlertDialog.Builder(this)
-                        .setMessage("Feed is updated!")
+                        .setMessage("Feed was updated!")
                         .setCancelable(false)
                         .setPositiveButton("OK",
                                 new DialogInterface.OnClickListener() {
