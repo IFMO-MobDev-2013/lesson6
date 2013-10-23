@@ -1,0 +1,15 @@
+package ru.zulyaev.ifmo.lesson6.feed.rss2;
+
+import ru.zulyaev.ifmo.lesson6.xml.Element;
+
+/**
+ * @author Никита
+ */
+public class Rss2Image {
+    @Element(required = true)
+    private String url;
+
+    public String getUrl() {
+        return url;
+    }
+}

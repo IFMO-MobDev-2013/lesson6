@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zss Reader</string>
+    <string name="input_hint">Enter url here…</string>
+    <string name="add">Add</string>
+    <string name="remove">Remove</string>
+
+    <string name="error_unknown">An unknown error occurred.</string>
+    <string name="error_parse">This feed has unknown format.</string>
+    <string name="error_net">Couldn\'t connect. Make sure that the url is correct and internet is available.</string>
+</resources>
