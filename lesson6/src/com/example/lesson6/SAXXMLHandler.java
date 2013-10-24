@@ -1,7 +1,6 @@
 package com.example.lesson6;
 
 import java.util.ArrayList;
-import java.util.List;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -61,7 +60,7 @@ public class SAXXMLHandler extends DefaultHandler {
     @Override
     public void characters(char[] ch, int start, int length)
             throws SAXException {
-    //    tempVal = new String(ch, start, length);
+
         String readChars = new String(ch,start,length);
         if(buffer != null) buffer.append(readChars);
     }
@@ -71,7 +70,7 @@ public class SAXXMLHandler extends DefaultHandler {
             throws SAXException {
         tempVal  = buffer.toString();
         if (qName.equalsIgnoreCase(KEY_ITEM) || qName.equalsIgnoreCase(KEY_ITEM2)) {
-            // add it to the list
+
             feed.add(tempFeedItem);
             inItem = false;
 
@@ -96,37 +95,6 @@ public class SAXXMLHandler extends DefaultHandler {
             tempFeedItem.setDate(tempVal);
         }
     }
-/*
-    @Override
-    public void endElement(String uri, String localName, String qName)
-            throws SAXException {
-        if (qName.equalsIgnoreCase(KEY_ITEM) || qName.equalsIgnoreCase(KEY_ITEM2)) {
-            // add it to the list
-            feed.add(tempFeedItem);
-            inItem = false;
-            //      tempVal  = buffer.toString();
-        } else if ((qName.equalsIgnoreCase(KEY_LINK) || qName.equalsIgnoreCase(KEY_LINK2)) && inItem) {
-            tempFeedItem.setLink(tempVal);
-        } else if ((qName.equalsIgnoreCase(KEY_TITLE) || qName.equalsIgnoreCase(KEY_TITLE2)) && inItem) {
-            tempFeedItem.setTitle(tempVal);
-        } else if ((qName.equalsIgnoreCase(KEY_DESC) || qName.equalsIgnoreCase(KEY_DESC2))&& inItem) {
-            String desc = tempVal.trim();
-            if (desc.indexOf("<p>") != -1)  desc = desc.replaceAll("<p>", "");
-            if (desc.indexOf("</p>") != -1)  desc = desc.replaceAll("</p>", "");
-            if (desc.indexOf("<br>") != -1)  desc = desc.replaceAll("<br>", "\n");
-            if (desc.indexOf("<br/>") != -1)  desc = desc.replaceAll("<br/>", "\n");
-            if (desc.indexOf("&amp;") != -1)  desc = desc.replaceAll("&amp;", "&");
-            if (desc.indexOf("&quot;") != -1)  desc = desc.replaceAll("&quot;", "\"");
-            if (desc.indexOf("&gt;") != -1)  desc = desc.replaceAll("&gt;", ">");
-            if (desc.indexOf("&lt;") != -1)  desc = desc.replaceAll("&lt;", "<");
-            if (desc.indexOf("&apos;") != -1)  desc = desc.replaceAll("&apos;", "'");
 
-            tempFeedItem.setDesc(tempVal);
-        } else if ((qName.equalsIgnoreCase(KEY_DATE) || qName.equalsIgnoreCase(KEY_DATE2)) && inItem) {
-            tempFeedItem.setDate(tempVal);
-        }
-    }
-
-*/
 
 }

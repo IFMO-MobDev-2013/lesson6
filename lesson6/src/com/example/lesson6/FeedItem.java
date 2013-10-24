@@ -2,7 +2,7 @@ package com.example.lesson6;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
+
 
 /**
  * Created with IntelliJ IDEA.
@@ -20,7 +20,7 @@ public class FeedItem implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-       // Log.v("FeedItem", "writeToParcel..." + flags);
+
         dest.writeInt(rank);
         dest.writeString(description);
         dest.writeString(date);
@@ -29,7 +29,7 @@ public class FeedItem implements Parcelable {
     }
 
     public FeedItem(Parcel source){
-        //Log.v(TAG, "ParcelData(Parcel source): time to put back parcel data");
+
         rank = source.readInt();
         description = source.readString();
         date = source.readString();

@@ -27,15 +27,12 @@ public class SAXXMLParser {
 
 
         try {
-            // create a XMLReader from SAXParser
+
             XMLReader xmlReader = SAXParserFactory.newInstance().newSAXParser().getXMLReader();
-            // create a SAXXMLHandler
+
             SAXXMLHandler saxHandler = new SAXXMLHandler();
-            // store handler in XMLReader
+
             xmlReader.setContentHandler(saxHandler);
-            // the process starts
-
-
 
             InputSource inputSource = new InputSource();
             inputSource.setCharacterStream(new StringReader(xml));
@@ -47,7 +44,6 @@ public class SAXXMLParser {
             Log.d("XML", "SAXXMLParser: parse() failed");   // TODO: unhandled exception
         }
 
-        // return Employee list
         return feed;
     }
 }

@@ -31,19 +31,10 @@ public class MyIntentService extends IntentService {
 
 
     public static final String ACTION_MyIntentService = "RESPONSE";
-    //public static final String XML= "xml";
-    public static final String KEY_OUT = "outCode";
+
     public static final String KEY_DATA = "data";
 
-    public static final String KEY_SUCC = "success";
-    public static final String KEY_LOAD_FAIL = "loading failure";
-  //  public static final String KEY_PARSE_FAIL = "parsing failure";
 
-//    public static String KEY_LINK = "link";
-//    public static String KEY_TITLE = "title";
-//    public static String KEY_DATE = "pubDate";
-//    public static String KEY_DESC = "description";
-//    public static String KEY_ITEM = "item";
 
     public ArrayList<FeedItem> feed = null;
     //AlarmManager am = null;
@@ -89,45 +80,15 @@ public class MyIntentService extends IntentService {
             HttpEntity httpEntity = httpResponse.getEntity();
             xml = EntityUtils.toString(httpEntity);
 
-//            URL url = new URL(request);
-//            urlConnection = url.openConnection();
-//
-//            br = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-//            String line;
-//            StringBuffer stb = new StringBuffer();
-//            while ((line = br.readLine()) != null) {
-//                stb.append(line);
-//            }
-//            xml = stb.toString();
 
-        } catch (Exception e) {   // TODO: check what the exceptions i should catch
+        } catch (Exception e) {
             e.printStackTrace();
 
 
-
-            //intentResponse.putExtra(KEY_OUT, KEY_LOAD_FAIL);
             sendBroadcast(intentResponse);
             return;
         }
 
-//        try {
-//            SAXXMLParser sxp = new SAXXMLParser();
-//            feed = sxp.parse(xml);
-//
-//        } catch (Exception e) {   // TODO: check what the exceptions i should catch
-//            e.printStackTrace();
-//
-//            intentResponse.putExtra(KEY_OUT, KEY_PARSE_FAIL);
-//            sendBroadcast(intentResponse);
-//            return;
-//        }
-
-     //   intentResponse.putExtra(KEY_OUT, KEY_SUCC);
-
-//        if(feed != null)
-//           intentResponse.putExtra(KEY_OUT, KEY_SUCC);
-//        else
-//            intentResponse.putExtra(KEY_OUT, KEY_PARSE_FAIL);
 
 
 
