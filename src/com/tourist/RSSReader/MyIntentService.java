@@ -70,6 +70,6 @@ public class MyIntentService extends IntentService {
         sendBroadcast(response);
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         PendingIntent pi = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.setInexactRepeating(AlarmManager.RTC, 120000, 120000, pi);
+        manager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis() + 120000, 120000, pi);
     }
 }
