@@ -42,7 +42,7 @@ public class ChannelsAdapter extends ArrayAdapter<Channel>
             @Override
             public void onClick(View v)
             {
-                Intent intent = new Intent(program, Program.class);
+                Intent intent = new Intent(program, ArticlesActivity.class);
                 intent.putExtra("URL", entry.url);
                 program.startActivity(intent);
             }

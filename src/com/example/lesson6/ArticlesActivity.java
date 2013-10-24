@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -13,16 +12,17 @@ import org.w3c.dom.NodeList;
 
 import java.util.Vector;
 
-public class Program extends Activity
+public class ArticlesActivity extends Activity
 {
-    public MyAdapter adapter;
+    public ArticlesAdapter adapter;
+
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         Vector<Entry> e = new Vector<Entry>();
-        adapter = new MyAdapter(this, e, this);
+        adapter = new ArticlesAdapter(this, e, this);
         ListView list_view = (ListView) findViewById(R.id.listView);
         list_view.setAdapter(adapter);
         loadArticles(getIntent().getStringExtra("URL"));
@@ -48,6 +48,23 @@ public class Program extends Activity
             public void run() {
                 ((ProgressBar)findViewById(R.id.progressBar)).setVisibility(ProgressBar.INVISIBLE);
                 Console.print("Exception: "+e.getMessage());
+            }
+        });
+    }
+
+    public void onEntries(Vector<Entry> entries)
+    {
+        for (int i =0; i < entries.size(); i++)
+        {
+            //Console.print("("+entries.get(i).link+"): "+entries.get(i).title+"\n"+entries.get(i).description+"\n");
+            adapter.entries.add(entries.get(i));
+        }
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ((ProgressBar)findViewById(R.id.progressBar)).setVisibility(ProgressBar.INVISIBLE);
+                adapter.notifyDataSetChanged();
             }
         });
     }

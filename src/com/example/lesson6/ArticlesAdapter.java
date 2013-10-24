@@ -10,13 +10,13 @@ import android.widget.TextView;
 
 import java.util.Vector;
 
-class MyAdapter extends ArrayAdapter<Entry>
+class ArticlesAdapter extends ArrayAdapter<Entry>
 {
     private final Context context;
     public Vector<Entry> entries;
-    private Program program;
+    private ArticlesActivity program;
 
-    public MyAdapter(Context context, Vector<Entry> entries, Program program)
+    public ArticlesAdapter(Context context, Vector<Entry> entries, ArticlesActivity program)
     {
         super(context, R.layout.entry, entries);
         this.context = context;
@@ -43,6 +43,7 @@ class MyAdapter extends ArrayAdapter<Entry>
             {
                 Intent intent = new Intent(program, EntryActivity.class);
                 intent.putExtra("URL", entry.link);
+                intent.putExtra("DESCRIPTION", entry.description);
                 program.startActivity(intent);
             }
         });

@@ -11,10 +11,11 @@ public class EntryActivity extends Activity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        WebView wv =  new WebView(this);
+        setContentView(R.layout.web);
         Intent intent = getIntent();
         String link = intent.getStringExtra("URL");
-        wv.loadUrl(link);
-        setContentView(wv);
+        String description = intent.getStringExtra("DESCRIPTION");
+        WebView wv = (WebView)findViewById(R.id.webView);
+        wv.loadDataWithBaseURL(null, description, "text/html", "UTF-8", null);
     }
 }
