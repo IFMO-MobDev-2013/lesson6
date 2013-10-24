@@ -15,7 +15,6 @@ public class ChannelsActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.channels);
         Vector<Channel> e = new Vector<Channel>();
-        e.add(new Channel("http://vesti.ru/vesti.rss"));
         e.add(new Channel("http://lenta.ru/rss/"));
         e.add(new Channel("http://bash.im/rss/"));
         adapter = new ChannelsAdapter(this, e, this);
