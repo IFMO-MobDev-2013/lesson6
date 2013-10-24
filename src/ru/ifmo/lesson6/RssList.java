@@ -14,9 +14,6 @@ public class RssList extends Activity {
     /**
      * Called when the activity is first created.
      */
-    public void getA(){
-
-    }
 
     private ArrayList<String> rssNames = new ArrayList<String>();
     private ArrayAdapter<String> adapter;

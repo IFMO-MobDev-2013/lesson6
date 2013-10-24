@@ -44,7 +44,6 @@ public class ArticleList extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View itemClicked, int position, long id) {
                 Intent intent = new Intent(ArticleList.this, WebActivity.class);
-                intent.putExtra("url", articles.get(position).url);
                 intent.putExtra("description", articles.get(position).description);
                 startActivity(intent);
             }
@@ -65,7 +64,7 @@ public class ArticleList extends Activity {
         @Override
         protected ArrayList<Article> doInBackground(String... s) {
             try {
-                return AndroidSaxFeedParser.parse(s[0]);
+                return SaxParser.parse(s[0]);
             } catch (Exception ex){
 
             }
@@ -131,8 +130,7 @@ class Article {
 }
 
 
-class AndroidSaxFeedParser{
-    //private final static String[] CodeTables = new String[]{"cp1251", "UTF-8", "windows-1251"};
+class SaxParser {
 
     public static ArrayList<Article> parse(String URLAdress) {
         final Article currentArticle = new Article();

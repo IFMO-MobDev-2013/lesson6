@@ -20,7 +20,7 @@ public class Updater extends BroadcastReceiver {
     private static String BOOT_ACTION = "android.intent.action.BOOT_COMPLETED";
     private static ArrayList<String> urlList;
 
-    Updater(ArrayList<String> urls){
+    public Updater(ArrayList<String> urls){
         super();
         urlList = urls;
     }
@@ -31,7 +31,7 @@ public class Updater extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent broadcastIntent) {
 
-       if (BOOT_ACTION.equalsIgnoreCase(broadcastIntent.getAction())){
+        if (BOOT_ACTION.equalsIgnoreCase(broadcastIntent.getAction())){
             Updater.this.start(context);
         }
 
@@ -44,6 +44,6 @@ public class Updater extends BroadcastReceiver {
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Updater.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, pi);
+        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), /*AlarmManager.INTERVAL_HALF_HOUR*/ 10000, pi);
     }
 }

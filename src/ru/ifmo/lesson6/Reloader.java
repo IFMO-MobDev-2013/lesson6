@@ -2,7 +2,6 @@ package ru.ifmo.lesson6;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,10 +25,14 @@ public class Reloader extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         ArrayList<String> urls = intent.getStringArrayListExtra("urls");
-        ArrayList<ArrayList<Article>> AllFeeds = new ArrayList<ArrayList<Article>>();
-        for (int i = 0; i < urls.size(); i++){
-            AllFeeds.add(AndroidSaxFeedParser.parse(urls.get(i)));
+        try {
+            ArrayList<ArrayList<Article>> AllFeeds = new ArrayList<ArrayList<Article>>();
+            for (int i = 0; i < urls.size(); i++){
+                AllFeeds.add(SaxParser.parse(urls.get(i)));
+            }
+            // Feeds are possibly ready for being saved                      <--------------------
+        } catch (Exception ex){
+
         }
-        // Feeds are ready for being saved                      <--------------------
     }
 }
