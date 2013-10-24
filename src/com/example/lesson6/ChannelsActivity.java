@@ -21,5 +21,8 @@ public class ChannelsActivity extends Activity
         adapter = new ChannelsAdapter(this, e, this);
         ListView list_view = (ListView) findViewById(R.id.channelsList);
         list_view.setAdapter(adapter);
+
+        Reloader r = new Reloader(e);
+        r.start(this);
     }
 }
