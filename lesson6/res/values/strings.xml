@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">lesson6</string>
+
+    <string-array name="default_feeds">
+        <item>http://lenta.ru/rss</item>
+        <item>http://bash.im/rss/</item>
+    </string-array>
+
+
+</resources>
