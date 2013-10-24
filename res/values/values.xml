@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="default_urls">
+        <item>http://bash.im/rss</item>
+        <item>http://lenta.ru/rss</item>
+        <item>http://stackoverflow.com/feeds/tag/android</item>
+        <item>http://news.yandex.ru/index.rss</item>
+        <item>http://habrahabr.ru/rss/hubs/</item>
+    </string-array>
+</resources>
