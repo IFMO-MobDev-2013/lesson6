@@ -5,9 +5,10 @@ import android.app.IntentService;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.ResultReceiver;
-import android.util.Log;
 import com.polarnick.rss.Feed;
 import com.polarnick.rss.FeedEntry;
 import com.polarnick.rss.RSSHandler;
@@ -34,7 +35,7 @@ public class NewFeedChecker extends IntentService {
     public static final String FEED_KEY = "feed";
     public static final String RECEIVER_KEY = "receiver";
 
-    private static final int PERIOD_OF_REFRESH = 10 * 60 * 1000;//30 minutes
+    private static final int PERIOD_OF_REFRESH = 5 * 60 * 1000;//5 minutes
 
     public NewFeedChecker() {
         this("NewFeedCheckerIntentService");
@@ -52,19 +53,24 @@ public class NewFeedChecker extends IntentService {
         Feed actualFeed = null;
         String url = lastDownloadedFeed.getUrl();
         try {
-            SAXParserFactory factory = SAXParserFactory.newInstance();
-            SAXParser parser = factory.newSAXParser();
+            ConnectivityManager connManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+            NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
 
-            HttpResponse httpResponse = new DefaultHttpClient().execute(new HttpGet(url));
-            HttpEntity httpEntity = httpResponse.getEntity();
+            if (mWifi.isConnected()) {
+                SAXParserFactory factory = SAXParserFactory.newInstance();
+                SAXParser parser = factory.newSAXParser();
 
-            String xml = EntityUtils.toString(httpEntity, "UTF-8");
-            InputSource is = new InputSource(new StringReader(xml));
-            RSSHandler handler = new RSSHandler();
-            parser.parse(is, handler);
+                HttpResponse httpResponse = new DefaultHttpClient().execute(new HttpGet(url));
+                HttpEntity httpEntity = httpResponse.getEntity();
 
-            actualFeed = handler.retrieveFeed();
-            actualFeed.setUrl(url);
+                String xml = EntityUtils.toString(httpEntity, "UTF-8");
+                InputSource is = new InputSource(new StringReader(xml));
+                RSSHandler handler = new RSSHandler();
+                parser.parse(is, handler);
+
+                actualFeed = handler.retrieveFeed();
+                actualFeed.setUrl(url);
+            }
         } catch (IOException e) {
         } catch (ParserConfigurationException e) {
         } catch (SAXException e) {
@@ -81,7 +87,8 @@ public class NewFeedChecker extends IntentService {
         Bundle bundle = new Bundle();
         bundle.putBoolean(UberResultReceiver.Receiver.IS_FRESHER_KEY, moreActual);
         if (moreActual) {
-            bundle.putSerializable(UberResultReceiver.Receiver.FEED_KEY, lastDownloadedFeed);
+            intent.putExtra(FEED_KEY, actualFeed);
+            bundle.putSerializable(UberResultReceiver.Receiver.FEED_KEY, actualFeed);
         }
         receiver.send(0, bundle);
 
