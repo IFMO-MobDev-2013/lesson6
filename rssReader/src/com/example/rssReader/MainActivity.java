@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FeedActivity.class);
-                intent.putExtra("link", "bash.im/rss");
+                intent.putExtra("link", "http://bash.im/rss");
                 startActivity(intent);
             }
         });
@@ -31,7 +31,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, FeedActivity.class);
-                intent.putExtra("link", "lenta.ru/rss");
+                intent.putExtra("link", "http://lenta.ru/rss");
+                startActivity(intent);
             }
         });
     }

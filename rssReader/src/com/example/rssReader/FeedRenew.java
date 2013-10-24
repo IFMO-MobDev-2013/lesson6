@@ -1,8 +1,8 @@
 package com.example.rssReader;
 
-import android.os.AsyncTask;
+import android.app.IntentService;
+import android.content.Intent;
 import android.util.Xml;
-import com.example.rssReader.RssParser;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -17,25 +17,36 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class RssFeed extends AsyncTask<Void, Void, ArrayList<Map<String, Object>>> {
-    String link;
-
-    public RssFeed(String link){
+/**
+ * Created with IntelliJ IDEA.
+ * User: Руслан
+ * Date: 24.10.13
+ * Time: 21:42
+ * To change this template use File | Settings | File Templates.
+ */
+public class FeedRenew extends IntentService {
+    private String link;
+    private ArrayList<Map<String, Object>> data;
+    public FeedRenew(String link) {
+        super("FeedRenew");
         this.link = link;
     }
 
     @Override
-    protected void onPreExecute(){
-        super.onPreExecute();
+    public void onCreate(){
+        super.onCreate();
+    }
+
+    public ArrayList<Map<String, Object>> getData(){
+        return data;
     }
 
     @Override
-    protected ArrayList<Map<String, Object>> doInBackground(Void... params){
+    protected void onHandleIntent(Intent intent){
         HttpClient httpClient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(link);
         HttpResponse response;
         InputStream inputStream = null;
-        ArrayList<Map<String, Object>> data = null;
         try{
             response = httpClient.execute(httpGet);
             HttpEntity entity = response.getEntity();
@@ -59,12 +70,7 @@ public class RssFeed extends AsyncTask<Void, Void, ArrayList<Map<String, Object>
                     e.printStackTrace();
                 }
             }
+            stopSelf();
         }
-        return data;
-    }
-
-    protected ArrayList<Map<String, Object>> onPostExecute(ArrayList<Map<String, Object>>... result){
-        super.onPostExecute(result[0]);
-        return result[0];
     }
 }
