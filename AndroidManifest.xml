@@ -3,6 +3,7 @@
           package="com.ifmomd.igushkin.rss_reader">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-sdk
             android:minSdkVersion="15"
             android:targetSdkVersion="18"/>
