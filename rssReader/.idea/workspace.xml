@@ -33,7 +33,7 @@
     <file path="$PROJECT_DIR$/res/values/strings.xml" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382599065955" ignored="false" />
     <file path="/fragment.java" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382599232524" ignored="false" />
     <file path="/Dummy.txt" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382600095103" ignored="false" />
-    <file path="/RssParser.java" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382635775516" ignored="false" />
+    <file path="/RssParser.java" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382640031407" ignored="false" />
     <file path="/MainActivity.java" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382632429159" ignored="false" />
     <file path="/AndroidManifest.xml" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382639093759" ignored="false" />
     <file path="/ContentActivity.java" changelist="e67ca3e3-8da3-4e91-929b-2c2f5d12b1c8" time="1382639547652" ignored="false" />
@@ -249,7 +249,7 @@
       <file leaf-file-name="RssParser.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/example/rssReader/RssParser.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="69" column="5" selection-start="2197" selection-end="2197" vertical-scroll-proportion="1.1903052">
+            <state line="62" column="62" selection-start="1997" selection-end="1997" vertical-scroll-proportion="0.8473968">
               <folding />
             </state>
           </provider>
@@ -271,7 +271,6 @@
         <option value="$PROJECT_DIR$/res/layout/feedScreen.xml" />
         <option value="$PROJECT_DIR$/res/layout/contentScreen.xml" />
         <option value="$PROJECT_DIR$/src/com/example/rssReader/MainActivity.java" />
-        <option value="$PROJECT_DIR$/src/com/example/rssReader/RssParser.java" />
         <option value="$PROJECT_DIR$/src/com/example/rssReader/RssFeed.java" />
         <option value="$PROJECT_DIR$/res/layout/listnode.xml" />
         <option value="$PROJECT_DIR$/src/com/example/rssReader/FeedRenew.java" />
@@ -279,6 +278,7 @@
         <option value="$PROJECT_DIR$/AndroidManifest.xml" />
         <option value="$PROJECT_DIR$/src/com/example/rssReader/FeedActivity.java" />
         <option value="$PROJECT_DIR$/src/com/example/rssReader/ContentActivity.java" />
+        <option value="$PROJECT_DIR$/src/com/example/rssReader/RssParser.java" />
       </list>
     </option>
   </component>
@@ -821,7 +821,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/example/rssReader/RssParser.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="5" selection-start="2197" selection-end="2197" vertical-scroll-proportion="1.1903052">
+        <state line="62" column="62" selection-start="1997" selection-end="1997" vertical-scroll-proportion="0.8473968">
           <folding />
         </state>
       </provider>

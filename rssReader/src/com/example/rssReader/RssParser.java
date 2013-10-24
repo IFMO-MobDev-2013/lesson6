@@ -59,8 +59,12 @@ public class RssParser extends DefaultHandler {
     public void endElement(String namespaceURI, String localName, String qName) throws SAXException {
         if ("title".equals(tmpElement))
             map.put("title", title);
-        else if ("description".equals(tmpElement))
+        else if ("description".equals(tmpElement)){
+            description = description.replaceAll("<br(.*)?>", "\n");
+            description = description.replaceAll("&quot;", "");
             map.put("description", description);
+
+        }
         else if ("link".equals(tmpElement))
             map.put("link", link);
         else if ("pubDate".equals(tmpElement)){
