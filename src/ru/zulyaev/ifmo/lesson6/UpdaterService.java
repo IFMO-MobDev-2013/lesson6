@@ -27,10 +27,11 @@ public class UpdaterService extends IntentService {
     public static final String FEED_MAP_INDEX = UpdaterService.class + "_FEED_MAP";
     public static final String ACTION = UpdaterService.class + "_ACTION";
 
-    private static final long DELAY = 5000;
+    private static final long DELAY = 60000;
 
     private FeedParser parser = new FeedParser();
     private HttpClient client = new DefaultHttpClient();
+    private Bundle bundle = new Bundle();
 
     public UpdaterService() {
         super("Background updater");
@@ -39,20 +40,26 @@ public class UpdaterService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Intent broadcast = new Intent();
-        Bundle map = new Bundle();
         for (String url : intent.getExtras().getStringArrayList(REQUEST_INDEX)) {
+            Exception ex = null;
             try {
                 Feed feed = processUrl(url);
-                map.putSerializable(url, feed);
+                bundle.putSerializable(url, feed);
             } catch (ParseException e) {
-                map.putSerializable(url, new Exception(getString(R.string.error_parse)));
+                ex = new Exception(getString(R.string.error_parse));
             } catch (IOException e) {
-                map.putSerializable(url, new Exception(getString(R.string.error_net)));
+                ex = new Exception(getString(R.string.error_net));
             } catch (Exception e) {
-                map.putSerializable(url, new Exception(getString(R.string.error_unknown)));
+                ex = new Exception(getString(R.string.error_unknown));
+            }
+            if (ex != null) {
+                Object was = bundle.get(url);
+                if (was == null || was instanceof Exception) {
+                    bundle.putSerializable(url, ex);
+                }
             }
         }
-        broadcast.putExtra(FEED_MAP_INDEX, map);
+        broadcast.putExtra(FEED_MAP_INDEX, bundle);
         broadcast.setAction(ACTION);
         sendStickyBroadcast(broadcast);
 
