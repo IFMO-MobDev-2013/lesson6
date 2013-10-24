@@ -2,7 +2,7 @@ package ru.ifmo.rain.loboda.rss;
 
 import java.io.Serializable;
 
-public class RSSRecord implements Serializable{
+public class RSSRecord implements Serializable {
     private String author;
     private String annotation;
     private String date;

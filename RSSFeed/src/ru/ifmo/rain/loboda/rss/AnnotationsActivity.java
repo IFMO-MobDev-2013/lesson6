@@ -1,39 +1,28 @@
 package ru.ifmo.rain.loboda.rss;
 
 import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
-import org.xml.sax.SAXException;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class AnnotationsActivity extends Activity {
     EventReceiver receiver;
 
-    private class EventReceiver extends BroadcastReceiver{
+    private class EventReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            List<RSSRecord> records = (List<RSSRecord>)intent.getSerializableExtra("Result");
-            if(records == null){
+            List<RSSRecord> records = (List<RSSRecord>) intent.getSerializableExtra("Result");
+            if (records == null) {
                 Toast.makeText(getApplicationContext(), "Something went wrong", 1).show();
             }
             showResult(records);
@@ -56,7 +45,7 @@ public class AnnotationsActivity extends Activity {
         startService(intent);
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         unregisterReceiver(receiver);
         super.onDestroy();
     }

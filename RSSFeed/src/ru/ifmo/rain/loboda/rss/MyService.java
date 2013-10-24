@@ -1,9 +1,6 @@
 package ru.ifmo.rain.loboda.rss;
 
-import android.app.AlarmManager;
 import android.app.IntentService;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,13 +14,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyService extends IntentService
-{
+public class MyService extends IntentService {
     protected static String feed;
     protected List<RSSRecord> records;
-    PendingIntent pendingIntent;
 
-    public MyService(){
+    public MyService() {
         super("TaramPapPapPam");
     }
 
@@ -31,14 +26,14 @@ public class MyService extends IntentService
     protected void onHandleIntent(Intent intent) {
         Bundle bundle = intent.getExtras();
         String task = bundle.getString("task");
-        if(task != null){
-            if(feed != null){
-                if(task.equals("UPDATE")){
+        if (task != null) {
+            if (feed != null) {
+                if (task.equals("UPDATE")) {
                     RSSFetcher fetcher = new RSSFetcher();
                     fetcher.execute(feed);
                 }
             }
-            if(task.equals("SITE")){
+            if (task.equals("SITE")) {
                 // By contract, make it impossible to be null
                 feed = bundle.getString("site");
                 RSSFetcher fetcher = new RSSFetcher();
@@ -47,11 +42,11 @@ public class MyService extends IntentService
         }
     }
 
-    private void setResult(List<RSSRecord> records){
+    private void setResult(List<RSSRecord> records) {
         this.records = records;
         Intent intent = new Intent();
         intent.setAction("ru.ifmo.rain.loboda.ACTION.sendResult");
-        intent.putExtra("Result", (Serializable)records);
+        intent.putExtra("Result", (Serializable) records);
         sendBroadcast(intent);
     }
 
