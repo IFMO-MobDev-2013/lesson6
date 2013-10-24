@@ -27,3 +27,8 @@ proguard/
 *.ipr
 *.iws
 .idea/
+
+# build config
+build.xml
+proguard-project.txt
+project.properties
