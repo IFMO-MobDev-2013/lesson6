@@ -44,6 +44,6 @@ public class Updater extends BroadcastReceiver {
         AlarmManager am = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(context, Updater.class);
         PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
-        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), /*AlarmManager.INTERVAL_HALF_HOUR*/ 10000, pi);
+        am.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), AlarmManager.INTERVAL_HALF_HOUR, pi);
     }
 }
