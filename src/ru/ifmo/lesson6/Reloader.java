@@ -33,6 +33,8 @@ public class Reloader extends IntentService {
             // Feeds are possibly ready for being saved                      <--------------------
         } catch (Exception ex){
 
+        } finally {
+            stopSelf();
         }
     }
 }
