@@ -13,6 +13,7 @@ import java.util.List;
  * Created by Sergey on 10/24/13.
  */
 public class FeedFetchingService extends IntentService {
+
     public FeedFetchingService(String name) {
         super(name);
     }
@@ -54,7 +55,6 @@ public class FeedFetchingService extends IntentService {
                 channels.clear();
                 channels.addAll(channels);
             }
-            Intent result = new Intent();
             Intent broadcastIntent = new Intent();
             broadcastIntent.setAction("FEED_FETCHED" /*some magic const here*/);
             broadcastIntent.addCategory(Intent.CATEGORY_DEFAULT);
