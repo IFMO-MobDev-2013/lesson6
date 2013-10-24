@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import ru.zulyaev.ifmo.lesson6.util.Utils;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author Никита
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         }
     };
 
-    private List<String> feeds;
+    private ArrayList<String> feeds;
     private SharedPreferences preferences;
     private EditText input;
     private ArrayAdapter<String> adapter;
@@ -62,6 +62,8 @@ public class MainActivity extends Activity {
         listView.setOnCreateContextMenuListener(onCreateContextMenuListener);
 
         input = (EditText) findViewById(R.id.input);
+
+        refreshList();
     }
 
     private void showFeed(String url) {
@@ -90,5 +92,9 @@ public class MainActivity extends Activity {
     private void refreshList() {
         preferences.edit().putString(FEEDS_PREF, GSON.toJson(feeds.toArray())).commit();
         adapter.notifyDataSetChanged();
+
+        Intent intent = new Intent(this, UpdaterService.class);
+        intent.putExtra(UpdaterService.REQUEST_INDEX, feeds);
+        startService(intent);
     }
 }

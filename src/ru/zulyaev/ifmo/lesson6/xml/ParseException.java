@@ -1,4 +1,4 @@
-package ru.zulyaev.ifmo.lesson6.feed;
+package ru.zulyaev.ifmo.lesson6.xml;
 
 import java.io.IOException;
 

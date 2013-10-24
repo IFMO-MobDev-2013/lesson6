@@ -4,11 +4,11 @@ package ru.zulyaev.ifmo.lesson6.xml;
  * @author Никита
  */
 class RootBinder<T> implements WiredBinder<T> {
-    private final Class<T> clazz;
+    private final Class<? extends T> clazz;
     private final String name;
     private T result;
 
-    RootBinder(Class<T> clazz) {
+    RootBinder(Class<? extends T> clazz) {
         this.clazz = clazz;
         Root root = clazz.getAnnotation(Root.class);
         if (root == null) {

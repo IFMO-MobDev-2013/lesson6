@@ -1,11 +1,12 @@
 package ru.zulyaev.ifmo.lesson6.feed;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Никита
  */
-public interface Feed {
+public interface Feed extends Serializable {
     /**
      * required
      * @return Feed title

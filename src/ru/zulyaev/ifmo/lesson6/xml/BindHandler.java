@@ -18,7 +18,7 @@ class BindHandler<T> extends DefaultHandler {
     private String skipTag;
     private int skipCount;
 
-    public BindHandler(Class<T> clazz) throws Exception {
+    public BindHandler(Class<? extends T> clazz) throws Exception {
         this.rootBinder = new RootBinder<T>(clazz);
         this.binders.add(rootBinder);
     }

@@ -1,12 +1,11 @@
 package ru.zulyaev.ifmo.lesson6.feed;
 
-import android.util.Log;
 import ru.zulyaev.ifmo.lesson6.feed.atom.AtomFeed;
 import ru.zulyaev.ifmo.lesson6.feed.rss1.Rss1Feed;
 import ru.zulyaev.ifmo.lesson6.feed.rss2.Rss2Feed;
 import ru.zulyaev.ifmo.lesson6.xml.XmlBinder;
 
-import java.io.*;
+import java.io.Reader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +19,7 @@ public class FeedParser {
             Rss1Feed.class,
             Rss2Feed.class
     );
+    private final XmlBinder xmlBinder = new XmlBinder();
 
     private List<Class<? extends Feed>> formats;
 
@@ -32,15 +32,7 @@ public class FeedParser {
     }
 
 
-    public Feed parse(String xml) throws IOException {
-        XmlBinder binder = new XmlBinder();
-        for (Class<? extends Feed> format : formats) {
-            try {
-                return binder.bind(format, new StringReader(xml));
-            } catch (Exception e) {
-                Log.d(FeedParser.class.toString(), "Not " + format.getName(), e);
-            }
-        }
-        throw new ParseException("None of standards applies to this stream");
+    public Feed parse(Reader reader) throws Exception {
+        return xmlBinder.bindFirst(formats, reader);
     }
 }
