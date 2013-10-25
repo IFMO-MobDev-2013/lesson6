@@ -49,6 +49,7 @@ public class UpdateRSS extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String link = intent.getStringExtra("link");
 //        Log.d("current link", link);
+        exception = null;
         try {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
