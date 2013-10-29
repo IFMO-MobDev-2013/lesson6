@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.sax.EndElementListener;
 import android.sax.EndTextElementListener;
 import android.sax.RootElement;
+import android.util.Log;
 import android.util.Xml;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -29,6 +32,7 @@ public class ArticleList extends Activity {
     ArrayAdapter<String> adapter;
     ArrayList<Article> articles;
 
+    private static final String TAG = "ArticleList";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,7 @@ public class ArticleList extends Activity {
             try {
                 return SaxParser.parse(s[0]);
             } catch (Exception ex){
-
+                Log.w(TAG, "Parser failed");
             }
             return new ArrayList<Article>();
         }
@@ -85,6 +89,7 @@ public class ArticleList extends Activity {
 }
 
 class Article {
+    static int type = 0;
     static String articleTag = "entry";
     String url;
     static String ulrTag = "id";
@@ -96,14 +101,16 @@ class Article {
     static String descriptionTag = "description";
     static String[] otherDescriptionsTag = new String[]{"etc", "content"};
 
-    public static void setType(String s){
-        if (s == "entry"){
+    public static void setType(int a){
+        if (a == 0){
+            type = 0;
             articleTag = "entry";
             ulrTag = "id";
             titleTag = "title";
             dateTag = "published";
             descriptionTag = "summary";
-        } else if (s == "item"){
+        } else if (a == 1){
+            type = 1;
             articleTag = "item";
             ulrTag = "link";
             titleTag = "title";
@@ -112,10 +119,10 @@ class Article {
         }
     }
     public static void changeType(){
-        if (articleTag == "entry"){
-            setType("item");
+        if (type == 0){
+            setType(1);
         } else {
-            setType("entry");
+            setType(0);
         }
     }
     public Article makeCopy(){
@@ -132,7 +139,7 @@ class Article {
 
 class SaxParser {
 
-    public static ArrayList<Article> parse(String URLAdress) {
+    public static ArrayList<Article> parse(String URLAdress) throws Exception {
         final Article currentArticle = new Article();
         RootElement root = new RootElement("rss");
         final ArrayList<Article> messages = new ArrayList<Article>();
@@ -201,8 +208,6 @@ class SaxParser {
 
             inr = new InputStreamReader(in, encoding);
             Xml.parse(inr, root.getContentHandler());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         } finally {
             try{
                 if (in != null) in.close();

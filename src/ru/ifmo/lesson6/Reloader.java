@@ -2,6 +2,7 @@ package ru.ifmo.lesson6;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -13,6 +14,8 @@ import java.util.ArrayList;
  * To change this template use File | Settings | File Templates.
  */
 public class Reloader extends IntentService {
+    final static private String TAG = "Reloader service";
+
     public Reloader(){
         super("RssLoader");
     }
@@ -32,7 +35,7 @@ public class Reloader extends IntentService {
             }
             // Feeds are possibly ready for being saved                      <--------------------
         } catch (Exception ex){
-
+            Log.w(TAG, "Perser failed");
         } finally {
             stopSelf();
         }
