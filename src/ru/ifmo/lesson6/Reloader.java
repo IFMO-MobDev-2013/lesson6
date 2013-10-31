@@ -35,7 +35,7 @@ public class Reloader extends IntentService {
             }
             // Feeds are possibly ready for being saved                      <--------------------
         } catch (Exception ex){
-            Log.w(TAG, "Perser failed");
+            Log.w(TAG, "Perser failed: " + ex.getMessage());
         } finally {
             stopSelf();
         }

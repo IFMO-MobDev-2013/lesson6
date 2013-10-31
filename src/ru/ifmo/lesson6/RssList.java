@@ -46,7 +46,7 @@ public class RssList extends Activity {
 
         addSite("lenta.ru", "http://lenta.ru/rss");
         addSite("bash.im", "http://bash.im/rss");
-        //addSite("ithappens", "http://ithappens.ru/rss/");
+        //addSite("stackoverflow.com", "http://stackoverflow.com/feeds/tag/android");
 
         Updater updater = new Updater(urls);
         updater.start(RssList.this);

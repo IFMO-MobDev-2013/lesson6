@@ -70,7 +70,7 @@ public class ArticleList extends Activity {
             try {
                 return SaxParser.parse(s[0]);
             } catch (Exception ex){
-                Log.w(TAG, "Parser failed");
+                Log.w(TAG, "Parser failed: " + ex.getMessage());
             }
             return new ArrayList<Article>();
         }
@@ -118,13 +118,17 @@ class Article {
             descriptionTag = "description";
         }
     }
-    public static void changeType(){
-        if (type == 0){
-            setType(1);
-        } else {
+    public static void setType(String s){
+        if (s == null){
+            Log.w("Article class", "Null pointer here");
+        }
+        if (s.equals("atom")){
             setType(0);
+        } else if (s.equals("rss")){
+            setType(1);
         }
     }
+
     public Article makeCopy(){
         Article a = new Article();
         a.url = url;
@@ -136,15 +140,60 @@ class Article {
 
 }
 
-
 class SaxParser {
+    private static final String RSS_TYPE = "rss";
+    private static final String ATOM_TYPE = "atom";
 
-    public static ArrayList<Article> parse(String URLAdress) throws Exception {
+    private static RootElement prepare(String type, ArrayList<Article> a) throws Exception{
         final Article currentArticle = new Article();
-        RootElement root = new RootElement("rss");
-        final ArrayList<Article> messages = new ArrayList<Article>();
-        android.sax.Element channel = root.getChild("channel");
-        for (int type = 0; type < 2; type++){
+        final ArrayList<Article> messages = a;
+        RootElement root;
+        if (type.equals(ATOM_TYPE)){
+            root = new RootElement("http://www.w3.org/2005/Atom", "feed");
+            android.sax.Element channel = root;
+            Article.setType(ATOM_TYPE);
+
+            android.sax.Element item = channel.getChild("http://www.w3.org/2005/Atom", Article.articleTag);
+            item.setEndElementListener(new EndElementListener(){
+                public void end() {
+                    messages.add(currentArticle.makeCopy());
+                }
+            });
+            item.getChild("http://www.w3.org/2005/Atom", Article.titleTag).setEndTextElementListener(new EndTextElementListener(){
+                public void end(String body) {
+                    currentArticle.title = body;
+                }
+            });
+            item.getChild("http://www.w3.org/2005/Atom", Article.ulrTag).setEndTextElementListener(new EndTextElementListener(){
+                public void end(String body) {
+                    currentArticle.url = body;
+                }
+            });
+            item.getChild("http://www.w3.org/2005/Atom", Article.descriptionTag).setEndTextElementListener(new EndTextElementListener(){
+                public void end(String body) {
+                    currentArticle.description = body;
+                }
+            });
+            item.getChild("http://www.w3.org/2005/Atom", Article.dateTag).setEndTextElementListener(new EndTextElementListener(){
+                public void end(String body) {
+                    currentArticle.date = body;
+                }
+            });
+            for (int j = 0; j < Article.otherDescriptionsTag.length; j++){
+                item.getChild("http://www.w3.org/2005/Atom", Article.otherDescriptionsTag[j]).setEndTextElementListener(new EndTextElementListener(){
+                    public void end(String body) {
+                        if (body != "" && body != null){
+                            currentArticle.description = body;
+                        }
+                    }
+                });
+            }
+
+        } else if (type.equals(RSS_TYPE)){
+            root = new RootElement("rss");
+            android.sax.Element channel = root.getChild("channel");
+            Article.setType(RSS_TYPE);
+
             android.sax.Element item = channel.getChild(Article.articleTag);
             item.setEndElementListener(new EndElementListener(){
                 public void end() {
@@ -171,7 +220,6 @@ class SaxParser {
                     currentArticle.date = body;
                 }
             });
-            Article.changeType();
             for (int j = 0; j < Article.otherDescriptionsTag.length; j++){
                 item.getChild(Article.otherDescriptionsTag[j]).setEndTextElementListener(new EndTextElementListener(){
                     public void end(String body) {
@@ -181,8 +229,15 @@ class SaxParser {
                     }
                 });
             }
+
+        } else {
+            throw new Exception("Wrong RSS type case");
         }
 
+        return root;
+    }
+    public static ArrayList<Article> parse(String URLAdress) throws Exception {
+        final ArrayList<Article> messages = new ArrayList<Article>();
 
         InputStream in = null;
         InputStreamReader inr = null;
@@ -190,25 +245,38 @@ class SaxParser {
             URL feedUrl = new URL(URLAdress);
             URLConnection conn = feedUrl.openConnection();
             in = conn.getInputStream();
-            String headerPart = "charset=UTF-8";
+            String headerPart = "";
+            final String enc_key = "charset=";
             for (int j = 0; headerPart != null; j++){
-               headerPart = conn.getHeaderField(j);
-               if (headerPart.indexOf("charset=") != -1) break;
+               headerPart = conn.getHeaderField(j).toLowerCase();
+               if (headerPart.indexOf(enc_key) != -1) break;
             }
-            String key = "charset=";
             String encoding;
+            String feedType;
+
             if (headerPart != null){
-                encoding = headerPart.substring(headerPart.indexOf(key) + key.length());
+                encoding = headerPart.substring(headerPart.indexOf(enc_key) + enc_key.length());
                 if (encoding.indexOf(';') != -1){
                     encoding = encoding.substring(0, encoding.indexOf(';'));
                 }
+                if (headerPart.indexOf(ATOM_TYPE) != -1){
+                    feedType = ATOM_TYPE;
+                } else if (headerPart.indexOf(RSS_TYPE) != -1 || headerPart.indexOf("xml") != -1) {
+                    feedType = RSS_TYPE;
+                } else {
+                    throw new Exception("RSS type is out of consideration or isn't defined");
+                }
+
             } else {
-                encoding = "UTF-8";
+                throw new Exception("Failed to get encoding / RSS type");
             }
+
+            RootElement root = prepare(feedType, messages);
 
             inr = new InputStreamReader(in, encoding);
             Xml.parse(inr, root.getContentHandler());
-        } finally {
+        } finally
+         {
             try{
                 if (in != null) in.close();
             } catch (Throwable ex){
