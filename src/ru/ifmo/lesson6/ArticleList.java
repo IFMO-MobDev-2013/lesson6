@@ -18,7 +18,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created with IntelliJ IDEA.
@@ -89,48 +92,45 @@ public class ArticleList extends Activity {
 }
 
 class Article {
-    static int type = 0;
+    public static final String RSS_TYPE = "rss";
+    public static final String ATOM_TYPE = "atom";
+
     static String articleTag = "entry";
     String url;
     static String ulrTag = "id";
     String title;
     static String titleTag = "title";
-    String date;
+    Date date;
     static String dateTag = "published";
+    static SimpleDateFormat dateFormat = new SimpleDateFormat();
     String description;
-    static String descriptionTag = "description";
+    static String descriptionTag = "summary";
     static String[] otherDescriptionsTag = new String[]{"etc", "content"};
 
-    public static void setType(int a){
-        if (a == 0){
-            type = 0;
-            articleTag = "entry";
-            ulrTag = "id";
-            titleTag = "title";
-            dateTag = "published";
-            descriptionTag = "summary";
-        } else if (a == 1){
-            type = 1;
-            articleTag = "item";
-            ulrTag = "link";
-            titleTag = "title";
-            dateTag = "pubDate";
-            descriptionTag = "description";
-        }
-    }
     public static void setType(String s){
         if (s == null){
             Log.w("Article class", "Null pointer here");
         }
-        if (s.equals("atom")){
-            setType(0);
-        } else if (s.equals("rss")){
-            setType(1);
+        if (ATOM_TYPE.equals(s)){
+            articleTag = "entry";
+            ulrTag = "id";
+            titleTag = "title";
+            dateTag = "published";
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+            descriptionTag = "summary";
+
+        } else if (RSS_TYPE.equals(s)){
+            articleTag = "item";
+            ulrTag = "link";
+            titleTag = "title";
+            dateTag = "pubDate";
+            dateFormat = new SimpleDateFormat("E, dd MMM yyyy HH:mm:ss ZZZZ");
+            descriptionTag = "description";
         }
     }
 
     public Article makeCopy(){
-        Article a = new Article();
+            Article a = new Article();
         a.url = url;
         a.title = title;
         a.date = date;
@@ -141,17 +141,14 @@ class Article {
 }
 
 class SaxParser {
-    private static final String RSS_TYPE = "rss";
-    private static final String ATOM_TYPE = "atom";
-
     private static RootElement prepare(String type, ArrayList<Article> a) throws Exception{
         final Article currentArticle = new Article();
         final ArrayList<Article> messages = a;
         RootElement root;
-        if (type.equals(ATOM_TYPE)){
+        if (type.equals(Article.ATOM_TYPE)){
             root = new RootElement("http://www.w3.org/2005/Atom", "feed");
             android.sax.Element channel = root;
-            Article.setType(ATOM_TYPE);
+            Article.setType(Article.ATOM_TYPE);
 
             android.sax.Element item = channel.getChild("http://www.w3.org/2005/Atom", Article.articleTag);
             item.setEndElementListener(new EndElementListener(){
@@ -176,7 +173,11 @@ class SaxParser {
             });
             item.getChild("http://www.w3.org/2005/Atom", Article.dateTag).setEndTextElementListener(new EndTextElementListener(){
                 public void end(String body) {
-                    currentArticle.date = body;
+                    try {
+                        currentArticle.date = Article.dateFormat.parse(body);
+                    } catch (ParseException ex){
+                        Log.w("Parser", "Date parsing error");
+                    }
                 }
             });
             for (int j = 0; j < Article.otherDescriptionsTag.length; j++){
@@ -189,10 +190,10 @@ class SaxParser {
                 });
             }
 
-        } else if (type.equals(RSS_TYPE)){
+        } else if (type.equals(Article.RSS_TYPE)){
             root = new RootElement("rss");
             android.sax.Element channel = root.getChild("channel");
-            Article.setType(RSS_TYPE);
+            Article.setType(Article.RSS_TYPE);
 
             android.sax.Element item = channel.getChild(Article.articleTag);
             item.setEndElementListener(new EndElementListener(){
@@ -217,7 +218,11 @@ class SaxParser {
             });
             item.getChild(Article.dateTag).setEndTextElementListener(new EndTextElementListener(){
                 public void end(String body) {
-                    currentArticle.date = body;
+                    try {
+                        currentArticle.date = Article.dateFormat.parse(body);
+                    } catch (ParseException ex){
+                        Log.w("Parser", "Date parsing error");
+                    }
                 }
             });
             for (int j = 0; j < Article.otherDescriptionsTag.length; j++){
@@ -247,9 +252,9 @@ class SaxParser {
             in = conn.getInputStream();
             String headerPart = "";
             final String enc_key = "charset=";
-            for (int j = 0; headerPart != null; j++){
+            for (int j = 0; ; j++){
                headerPart = conn.getHeaderField(j).toLowerCase();
-               if (headerPart.indexOf(enc_key) != -1) break;
+                if (headerPart == null || headerPart.indexOf(enc_key) != -1) break;
             }
             String encoding;
             String feedType;
@@ -259,10 +264,10 @@ class SaxParser {
                 if (encoding.indexOf(';') != -1){
                     encoding = encoding.substring(0, encoding.indexOf(';'));
                 }
-                if (headerPart.indexOf(ATOM_TYPE) != -1){
-                    feedType = ATOM_TYPE;
-                } else if (headerPart.indexOf(RSS_TYPE) != -1 || headerPart.indexOf("xml") != -1) {
-                    feedType = RSS_TYPE;
+                if (headerPart.indexOf(Article.ATOM_TYPE) != -1){
+                    feedType = Article.ATOM_TYPE;
+                } else if (headerPart.indexOf(Article.RSS_TYPE) != -1 || headerPart.indexOf("xml") != -1) {
+                    feedType = Article.RSS_TYPE;
                 } else {
                     throw new Exception("RSS type is out of consideration or isn't defined");
                 }
