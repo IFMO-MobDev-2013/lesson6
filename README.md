@@ -3,7 +3,7 @@
 Работа Георгия Агапова (гр.2537)
 
 Читалка для rss/atom.
-APK: https://dl.dropboxusercontent.com/u/3693476/apk/GFeedReader.apk
+APK: https://dl.dropboxusercontent.com/u/3693476/apk/GFeedReader-l6.apk
 
 Протестировано на ссылках:
 
