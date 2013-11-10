@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">RSS reader</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_description">MainActivity</string>
+    <string name="stack_text">Stackoverflow: android</string>
+    <string name="lenta_text">Lenta.ru</string>
+    <string name="bash_text">Bash.im</string>
+
+</resources>

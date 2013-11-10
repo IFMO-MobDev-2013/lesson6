@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:textSize="50sp"
+        android:text="@string/bash_text"
+        android:onClick="bashOnClick"/>
+
+    <Button
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:textSize="50sp"
+        android:onClick="lentaOnClick"
+        android:text="@string/lenta_text"/>
+    <Button
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:textSize="30sp"
+        android:onClick="stackOnClick"
+        android:text="@string/stack_text"/>
+
+</LinearLayout>
