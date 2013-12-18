@@ -58,7 +58,7 @@ public class MyIntentService extends IntentService {
         sendBroadcast(response);
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
         PendingIntent pi = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        manager.setRepeating(AlarmManager.ELAPSED_REALTIME, System.currentTimeMillis(), 100000, pi);
+        manager.setRepeating(AlarmManager.ELAPSED_REALTIME, System.currentTimeMillis() + 100000, 100000, pi);
     }
 }
 
