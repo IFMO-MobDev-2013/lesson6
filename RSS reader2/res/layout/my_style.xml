@@ -6,3 +6,4 @@
         xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/textView"
         android:textColor="#e3e7df" android:textSize="20dp" android:textIsSelectable="false">
 </TextView>
+
