@@ -118,6 +118,17 @@ public class ArticleDataBase {
             return null;
     }
 
+    public int getCountArticles() {
+        Cursor cursor = sqLiteDatabase.query(ArticleDataBase.TABLE_ARTICLE_NAME, new String[] {
+                ArticleDataBase.KEY_ID_ARTICLE, ArticleDataBase.KEY_TITLE_ARTICLE, ArticleDataBase.KEY_DESCRIPTION_ARTICLE, ArticleDataBase.KEY_LINKNAME_ARTICLE, ArticleDataBase.KEY_LINK_ARTICLE, ArticleDataBase.KEY_PUBDATE_ARTICLE },
+                null, // The columns for the WHERE clause
+                null, // The values for the WHERE clause
+                null, // don't group the rows
+                null, // don't filter by row groups
+                null // The sort order
+        );
+        return cursor.getCount();
+    }
 
     public void updateFeed(String mainName, String mainFeed) {
         Cursor cursor = sqLiteDatabase.query(ArticleDataBase.TABLE_FEED_NAME, new String[] {

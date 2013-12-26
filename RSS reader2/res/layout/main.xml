@@ -23,14 +23,8 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Several interesting sites:"
-                android:id="@+id/textView" android:layout_gravity="center" android:textColor="#b346ff"
-                android:textSize="18dp"/>
         <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="0dp"
                 android:divider="@color/reddivider"
                 android:dividerHeight="@dimen/twodp"

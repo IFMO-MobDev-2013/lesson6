@@ -17,7 +17,7 @@
             android:id="@+id/Colurl"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:textColor="#a8aca4" android:textSize="15dp" android:textIsSelectable="false"
-            android:text="url" android:layout_gravity="right" android:gravity="right"/>
+            android:textColor="#a8aca4" android:textSize="13dp" android:textIsSelectable="false"
+            android:text="url" android:gravity="left" android:layout_marginLeft="5dp"/>
 
 </LinearLayout>

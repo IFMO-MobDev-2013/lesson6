@@ -1,11 +1,15 @@
 package com.example.RSS_reader2;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,13 +26,12 @@ public class ArticleActivity extends Activity {
     public static final String KEY_FOR_INTENT = "key_for_intent";
     private String mainLinkName;
     private boolean isWasBroadcast = false;
-    static String printSMS = "List of articles for you";
     ListView listView;
     TextView message;
     ImageView imageView;
     ArrayList<Article> rssArticles = new ArrayList<Article>();
     public MyBroadcastReceiver myBroadcastReceiver;
-
+    public static ProgressDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class ArticleActivity extends Activity {
         setContentView(R.layout.list_of_rss);
         articlesDataBase = new ArticleDataBase(this);
         articlesDataBase.open();
+
         mainLinkName = getIntent().getStringExtra(MainActivity.KEY_FOR_WORKACTIVITY).toString();
         listView = (ListView) findViewById(R.id.listView);
         imageView = (ImageView) findViewById(R.id.imageView);
@@ -50,20 +54,38 @@ public class ArticleActivity extends Activity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    Intent intentMyIntentService = new Intent(ArticleActivity.this, MainIntentWork.class);
-                    intentMyIntentService.putExtra(KEY_FOR_INTENT, mainLinkName);
-                    startService(intentMyIntentService);
-                    //register of BroadcastReceiver
-                     printSMS = "List of articles was updated";
-                   } catch (Exception e) {
-                }
+
+                if (isNetworkAvailable()) {
+                    try {
+                        dialog = ProgressDialog.show(ArticleActivity.this, "Обновление данных. Пожалуйста, подождите...", null, true);
+                        dialog.show();
+                        isWasBroadcast = true;
+                        while (Updater.goodArticle > 1) ;
+                        articlesDataBase.deleteAllArticlesWithSuchLinkName(mainLinkName);
+                        Intent intentMyIntentService = new Intent(ArticleActivity.this, MainIntentWork.class);
+                        intentMyIntentService.putExtra(KEY_FOR_INTENT, mainLinkName);
+                        startService(intentMyIntentService);
+                        //register of BroadcastReceiver
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast toast = Toast.makeText(ArticleActivity.this, e.getMessage(), 3000);
+                        toast.setGravity(Gravity.TOP, 0, 0);
+                        toast.show();
+                    }
+                } else {
+                    Toast toast = Toast.makeText(ArticleActivity.this, "Error: no internet connection!", 3000);
+                    toast.setGravity(Gravity.TOP, 0, 0);
+                    toast.show();
+               }
             }
         });
+
         if (articlesDataBase.isSuchArticles(mainLinkName) == true) {
             isWasBroadcast = false;
             readFromDateBase();
         } else {
+            dialog = ProgressDialog.show(ArticleActivity.this, "Загрузка данных. Пожалуйста, подождите...", null, true);
+            dialog.show();
             isWasBroadcast = true;
             Intent intentMyIntentService = new Intent(ArticleActivity.this, MainIntentWork.class);
             intentMyIntentService.putExtra(KEY_FOR_INTENT, mainLinkName);
@@ -82,6 +104,7 @@ public class ArticleActivity extends Activity {
             }
         });
     }
+
     /*
     @Override
     protected void onDestroy() {
@@ -91,14 +114,24 @@ public class ArticleActivity extends Activity {
             unregisterReceiver(myBroadcastReceiver);
     }
     */
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
+
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (Updater.isLast == true && Updater.isAlarm == true || Updater.isLast == false && Updater.isAlarm == false) {
-                readFromDateBase();
-                Updater.isAlarm = false;
-                Updater.isLast = false;
-            }
+              if (Updater.goodArticle <= 1) {
+                  readFromDateBase();
+                  if (isWasBroadcast) {
+                      dialog.dismiss();
+                      isWasBroadcast = false;
+                  }
+              }
         }
     }
 
@@ -114,9 +147,6 @@ public class ArticleActivity extends Activity {
 
         SimpleAdapter adapter = new SimpleAdapter(this, rssPrint, R.layout.row, new String[] {MainActivity.KEY_URL_NAME, MainActivity.KEY_URL}, new int[] {R.id.Colname, R.id.Colurl});
         listView.setAdapter(adapter);
-        //Toast toast = Toast.makeText(ArticleActivity.this, printSMS, 3500);
-        //toast.show();
-        //printSMS = "List of articles for you";
     }
 
     private void readFromDateBase() {

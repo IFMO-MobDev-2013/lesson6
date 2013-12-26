@@ -22,10 +22,11 @@ public class SAXXMLParser extends DefaultHandler {
     public static final String LINK = "LINK";
     public static final String PUBDATE = "PUBDATE";
     public static final String ITEM = "ITEM";
-
+    public static int number;
 
     @Override
     public void startDocument() throws SAXException {
+        number = 0;
         super.startDocument();
     }
 
@@ -87,6 +88,7 @@ public class SAXXMLParser extends DefaultHandler {
 
     @Override
     public void endDocument() throws SAXException {
+        ++number;
         super.endDocument();
     }
 }

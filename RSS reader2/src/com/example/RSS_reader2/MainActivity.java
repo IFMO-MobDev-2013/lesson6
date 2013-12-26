@@ -5,6 +5,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -13,6 +15,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -24,8 +27,6 @@ public class MainActivity extends Activity {
     TextView textView;
     ListView listView;
     Intent intent;
-
-
 
     public static final String KEY_URL_NAME = "name";
     public static final String KEY_URL = "url";
@@ -39,21 +40,36 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
         listView = (ListView) findViewById(R.id.listView);
         textView = (TextView) findViewById(R.id.textView);
-        deleteDatabase(ArticleDataBase.DATABASE_NAME);
+        //deleteDatabase(ArticleDataBase.DATABASE_NAME);
         articlesDataBase = new ArticleDataBase(this);
         articlesDataBase.open();
         loadFeeds();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int index, long number) {
-                try {
-                    intent = new Intent(MainActivity.this, ArticleActivity.class);
-                    URL url = new URL(sites.get(index).get(MainActivity.KEY_URL).toString());
-                    intent.putExtra(KEY_FOR_WORKACTIVITY, sites.get(index).get(MainActivity.KEY_URL));
-                    someString = sites.get(index).get(MainActivity.KEY_URL);
-                    startActivity(intent);
-                } catch (MalformedURLException e) {
-                    Toast toast = Toast.makeText(MainActivity.this, "Wrong URL!", 3000);
+                while (Updater.goodArticle > 1) ;
+                if (articlesDataBase.isSuchArticles(sites.get(index).get(MainActivity.KEY_URL).toString()) == true ||
+                        isNetworkAvailable()) {
+                    if (sites.get(index).get(MainActivity.KEY_URL).toString().indexOf("rss") == -1 &&
+                            sites.get(index).get(MainActivity.KEY_URL).toString().indexOf("feed") == -1) {
+                        Toast toast = Toast.makeText(MainActivity.this, "Wrong URL!", 3000);
+                        toast.show();
+                        return;
+                    }
+                    try {
+                        URL url = new URL(sites.get(index).get(MainActivity.KEY_URL).toString());
+                        url.openConnection();
+                        intent = new Intent(MainActivity.this, ArticleActivity.class);
+                        intent.putExtra(KEY_FOR_WORKACTIVITY, sites.get(index).get(MainActivity.KEY_URL));
+                        someString = sites.get(index).get(MainActivity.KEY_URL);
+                        startActivity(intent);
+                    } catch(Exception e) {
+                        Toast toast = Toast.makeText(MainActivity.this, "Wrong URL!", 3000);
+                        toast.show();
+                    }
+                }
+                else {
+                    Toast toast = Toast.makeText(MainActivity.this, "Error: no internet connection!", 3000);
                     toast.show();
                 }
             }
@@ -64,26 +80,52 @@ public class MainActivity extends Activity {
             EditText inputText = (EditText) findViewById(R.id.editText);
             @Override
             public void onClick(View v) {
-                try {
-                    intent = new Intent(MainActivity.this, ArticleActivity.class);
-                    URL url = new URL(inputText.getText().toString());
-                    someString = inputText.getText().toString();
-                    intent.putExtra(KEY_FOR_WORKACTIVITY, inputText.getText().toString());
-                    startActivity(intent);
-                } catch (MalformedURLException e) {
-                    Toast toast = Toast.makeText(MainActivity.this, "Wrong URL!", 3000);
+                while (Updater.goodArticle > 1) ;
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(inputText.getWindowToken(), 0);
+                if (articlesDataBase.isSuchArticles(inputText.getText().toString()) == true ||
+                        isNetworkAvailable()) {
+                    if (inputText.getText().toString().indexOf("rss") == -1 &&
+                            inputText.getText().toString().indexOf("feed") == -1) {
+                        Toast toast = Toast.makeText(MainActivity.this, "Wrong URL!", 3000);
+                        toast.show();
+                        return;
+                    }
+                    try {
+                        URL url = new URL(inputText.getText().toString());
+                        url.openConnection();
+                        intent = new Intent(MainActivity.this, ArticleActivity.class);
+                        intent.putExtra(KEY_FOR_WORKACTIVITY, inputText.getText().toString());
+                        someString = inputText.getText().toString();
+                        startActivity(intent);
+                    } catch(Exception e) {
+                        Toast toast = Toast.makeText(MainActivity.this, "Wrong URL!", 3000);
+                        toast.show();
+                    }
+                } else {
+                    Toast toast = Toast.makeText(MainActivity.this, "Error: no internet connection!", 3000);
                     toast.show();
                 }
             }
         });
 
+        EditText editText = (EditText) findViewById(R.id.editText);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+
         intent = new Intent(MainActivity.this, Updater.class);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 15 * 60* 60 * 1000, 15 * 60 * 60 * 1000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() +  10 * 60 * 60 * 1000, 10 * 60 * 60 * 1000, pendingIntent);
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
 
     public static final int IDM_RENAME = 101;
     public static final int IDM_DELETE = 102;
@@ -223,6 +265,7 @@ public class MainActivity extends Activity {
             default:
                 return super.onContextItemSelected(item);
         }
+
         SimpleAdapter adapter = new SimpleAdapter(this, sites, R.layout.row, new String[] {MainActivity.KEY_URL_NAME, MainActivity.KEY_URL}, new int[] {R.id.Colname, R.id.Colurl});
         listView.setAdapter(adapter);
         return true;
@@ -247,7 +290,7 @@ public class MainActivity extends Activity {
         }
 
         sites = articlesDataBase.getFeeds();
-        SimpleAdapter adapter = new SimpleAdapter(this, sites, R.layout.row, new String[] {MainActivity.KEY_URL_NAME, MainActivity.KEY_URL}, new int[] {R.id.Colname, R.id.Colurl});
+        SimpleAdapter adapter = new SimpleAdapter(this, sites, R.layout.row2, new String[] {MainActivity.KEY_URL_NAME, MainActivity.KEY_URL}, new int[] {R.id.Colname, R.id.Colurl});
         listView.setAdapter(adapter);
         registerForContextMenu(listView);
     }

@@ -67,6 +67,7 @@ public class MainIntentWork extends IntentService {
         intentResponse.setAction(ACTION_MyIntentService);
         intentResponse.addCategory(Intent.CATEGORY_DEFAULT);
         intentResponse.putExtra(EXTRA_KEY_OUT_FOR_MESSAGE, sms);
+        if (Updater.goodArticle != 0) Updater.goodArticle--;
         sendBroadcast(intentResponse);
     }
     public void onDestroy() {
