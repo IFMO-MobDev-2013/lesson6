@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RSS reader2</string>
+    <color name="reddivider">#ffffe6c0</color>
+    <dimen name="twodp">1dp</dimen>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+        <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter your URL adress"
+                android:id="@+id/editText" android:layout_weight="1" android:minHeight="50dp"/>
+        <Button
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:text="GO"
+                android:id="@+id/button" android:layout_weight="0"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+        <ListView
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:divider="@color/reddivider"
+                android:dividerHeight="@dimen/twodp"
+                android:id="@+id/listView" android:layout_weight="1"/>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+
+
+
+    <TextView
+            android:id="@+id/Colname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#e3e7df" android:textSize="21dp" android:textIsSelectable="false"
+            android:text="name" android:layout_marginLeft="5dp"/>
+    <TextView
+            android:id="@+id/Colurl"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#a8aca4" android:textSize="15dp" android:textIsSelectable="false"
+            android:text="url" android:layout_gravity="right" android:gravity="right"/>
+
+</LinearLayout>
