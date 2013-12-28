@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="lenta.ru"
+            android:id="@+id/button" android:layout_gravity="center" android:layout_weight="1" android:onClick="lenta"
+            android:background="#FFDAB9"
+            android:textSize="20dp" android:textColor="#000000"/>
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="bash.im"
+            android:id="@+id/button1" android:layout_gravity="center" android:layout_weight="1" android:onClick="bash"
+            android:background="#EECBAD" android:textColor="#000000" android:textSize="20dp"
+            />
+    <Button
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="StackOverflow"
+            android:id="@+id/button2" android:layout_gravity="center" android:layout_weight="1"
+            android:onClick="stack" android:background="#CDAF95" android:textColor="#000000" android:textSize="20dp"
+            />
+</LinearLayout>
