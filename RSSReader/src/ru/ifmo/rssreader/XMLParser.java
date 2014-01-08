@@ -60,6 +60,9 @@ public class XMLParser {
             String article;
             try {
                 article = text.item(0).getChildNodes().item(0).getNodeValue();
+                if (article.equals("\n    ")) {
+                    article = text.item(0).getChildNodes().item(1).getNodeValue();
+                }
             } catch (NullPointerException exception) {
                 article = "No description available";
             }

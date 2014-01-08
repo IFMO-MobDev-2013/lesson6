@@ -7,5 +7,5 @@
     <WebView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/webView" android:layout_margin="2dp"/>
+            android:id="@+id/webView"/>
 </LinearLayout>

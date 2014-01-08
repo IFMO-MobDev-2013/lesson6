@@ -32,7 +32,7 @@ public class ShowTitlesActivity extends Activity {
         Intent intent = new Intent(this, MyIntentService.class);
         intent.putExtra("task", "new");
         intent.putExtra("url", url);
-        startService(intent);
+        this.startService(intent);
         myBroadcastReceiver = new MyBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter(MyIntentService.key);
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -40,6 +40,7 @@ public class ShowTitlesActivity extends Activity {
         am = (AlarmManager) getSystemService(ALARM_SERVICE);
         Intent newIntent = new Intent(this, MyIntentService.class);
         newIntent.putExtra("task", "upd");
+        newIntent.putExtra("url", url);
         pi = PendingIntent.getService(this, 0, newIntent, 0);
         am.setRepeating(AlarmManager.RTC, 0, 30000, pi);
     }
@@ -70,6 +71,7 @@ public class ShowTitlesActivity extends Activity {
             errorMessage("RSS is empty!");
             return;
         }
+        errorMessage("Articles:");
         String[] titles = new String[articles.size()];
         for (int i = 0; i < articles.size(); i++) {
             titles[i] = articles.get(i).getTitle();
