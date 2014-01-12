@@ -42,7 +42,7 @@ public class ShowTitlesActivity extends Activity {
         newIntent.putExtra("task", "upd");
         newIntent.putExtra("url", url);
         pi = PendingIntent.getService(this, 0, newIntent, 0);
-        am.setRepeating(AlarmManager.RTC, 0, 30000, pi);
+        am.setRepeating(AlarmManager.RTC, 0, 300000, pi);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ShowTitlesActivity extends Activity {
 
     private void showTitles(List<Article> articles) {
         if (articles == null) {
-            errorMessage("An error occurred while reading RSS.");
+            //errorMessage("An error occurred while reading RSS.");
             return;
         }
         articleList = articles;
