@@ -58,12 +58,12 @@ public class MySAXParser {
 
             if (item != null) {
                 if (name.equals("title")) {
-                    item.setKey(1);
+                    item.key = 1;
                     checker = true;
                 }
 
                 if (name.equals("description") || name.equals("content") || name.equals("summary")) {
-                    item.setKey(2);
+                    item.key = 2;
                     checker = true;
                 }
             }

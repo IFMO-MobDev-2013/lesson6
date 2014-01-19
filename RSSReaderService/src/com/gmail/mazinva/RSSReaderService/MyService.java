@@ -19,7 +19,7 @@ public class MyService extends IntentService {
     protected static String url;
     protected List<RSSItem> items;
 
-    private static final int KILOBYTE = 1000;
+    private static final int KILOBYTE = 1024;
 
     public MyService() {
         super("MyService");
@@ -101,22 +101,22 @@ public class MyService extends IntentService {
                 return items;
                 
             } catch (MalformedURLException e) {
-                cause = "Wrong URL";
+                cause = getString(R.string.WrongURL);
                 return null;
             } catch (SAXException e) {
-                cause = "RSS-channel is lost, empty or contains errors";
+                cause = getString(R.string.RSSLost);
                 return null;
             } catch (UnsupportedEncodingException e) {
-                cause = "RSS-channel is lost, empty or contains errors";
+                cause = getString(R.string.RSSLost);
                 return null;
             } catch (IOException e) {
-                cause = "Channel reading error";
+                cause = getString(R.string.ChannelReadingError);
                 return null;
             } catch (ParserConfigurationException e) {
-                cause = "Channel reading error";
+                cause = getString(R.string.ChannelReadingError);
                 return null;
             } catch (Exception e) {
-                cause = "Channel reading error";
+                cause = getString(R.string.ChannelReadingError);
                 return null;
             } finally {
                 if (inputStream != null) {

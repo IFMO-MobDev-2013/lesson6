@@ -3,16 +3,12 @@ package com.gmail.mazinva.RSSReaderService;
 import java.io.Serializable;
 
 public class RSSItem implements Serializable {
-    private String title;
-    private String description;
+    public String title;
+    public String description;
 
-    private int key = 0;
+    public int key = 0;
 
     public RSSItem() {}
-
-    public void setKey(int value) {
-        key = value;
-    }
 
     public void set(String value) {
         switch (key) {
@@ -25,13 +21,4 @@ public class RSSItem implements Serializable {
             default:
         }
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
 }

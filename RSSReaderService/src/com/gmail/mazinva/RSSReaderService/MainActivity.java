@@ -25,11 +25,12 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, MyService.class);
         intent.putExtra("task", "UPDATE");
 
-        // Updating each 20 seconds
+        // Updating each 60 seconds
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
         PendingIntent pendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 20000, 20000, pendingIntent);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + 60000, 60000, pendingIntent);
+
 
         Button button = (Button) findViewById(R.id.button);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -40,8 +41,10 @@ public class MainActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String str = (String) adapterView.getAdapter().getItem(i);
-                ((EditText) findViewById(R.id.editText)).setText(str, TextView.BufferType.EDITABLE);
+                Intent intent = new Intent(view.getContext(), TitlesActivity.class);
+                String text = (String) adapterView.getAdapter().getItem(i);
+                intent.putExtra("url", text);
+                startActivity(intent);
             }
         });
 

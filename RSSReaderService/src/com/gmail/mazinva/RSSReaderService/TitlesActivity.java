@@ -22,7 +22,7 @@ public class TitlesActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
             List<RSSItem> items = (List<RSSItem>) intent.getSerializableExtra("items");
             if (items == null) {
-                Toast.makeText(getApplicationContext(), "Nothing to show =(", 1).show();
+                Toast.makeText(getApplicationContext(), R.string.NothingToShow, 1).show();
             }
             showResult(items);
         }
@@ -63,8 +63,8 @@ public class TitlesActivity extends Activity {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Intent intent = new Intent(adapterView.getContext(), DescriptionsActivity.class);
                     RSSItem item = (RSSItem) adapterView.getAdapter().getItem(i);
-                    intent.putExtra("title", item.getTitle());
-                    intent.putExtra("description", item.getDescription());
+                    intent.putExtra("title", item.title);
+                    intent.putExtra("description", item.description);
                     startActivity(intent);
                 }
             });
@@ -102,10 +102,10 @@ public class TitlesActivity extends Activity {
                 view = inflater.inflate(R.layout.title_item, null);
             }
             TextView textView = (TextView) view.findViewById(R.id.title);
-            if (item.getTitle() == null) {
+            if (item.title == null) {
                 textView.setVisibility(View.GONE);
             } else {
-                textView.setText(item.getTitle());
+                textView.setText(item.title);
             }
 
             return view;
